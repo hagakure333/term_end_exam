@@ -7,7 +7,7 @@
 #include <stdlib.h>
 int main(){
 	
-		FILE *fp;
+		FILE *fp,*fp2;
 		char directry[CHARBUFF];
 		char urlInput[CHARBUFF];
 		getCurrentDirectory(directry);
@@ -94,6 +94,8 @@ int main(){
 		}
 		sprintf(htmlName, "%s.html", buf2);
 		fp = fopen(htmlName, "w");
+		sprintf(htmlName, "%s.txt", buf2);
+		fp2 = fopen(htmlName, "w");
 		// サーバからのHTTPメッセージ受信
 		while (n > 0) {
 			memset(buf, 0, sizeof(buf));
@@ -114,6 +116,7 @@ int main(){
 			}*/
 			//if (flag == 1) {
 			fwrite(buf, n, 1, fp);
+			fwrite(buf, n, 1, fp2);
 			//}
 		}
 
