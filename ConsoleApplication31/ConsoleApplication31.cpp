@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#include <iphlpapi.h>
 #include "Setting.h"
 
 int main(int argc, char *argv[]){
@@ -9,7 +10,7 @@ int main(int argc, char *argv[]){
 	char directry[CHARBUFF];
 	char urlInput[CHARBUFF];
 	 getCurrentDirectory(directry);
-	writeCharInput("URL", "1", "172.217.175.227",directry,"url情報" );
+	
 	WSADATA wsaData;//Windows Sockets仕様に関する情報を格納する
 	struct sockaddr_in server;//接続先のIPアドレスやポート番号の情報を保持する
 	SOCKET sock;//特定のトランスポート・サービス・プロバイダにバインドされているソケットを作成
@@ -17,34 +18,11 @@ int main(int argc, char *argv[]){
 	int flag = 0;
 	unsigned int **addrptr;
 	
-	char host_address[20] = "172.217.175.227";
-	char host_name[CHARBUFF] = "www.sony.jp";
-	struct hostent *remoteHost;
-	remoteHost = gethostbyname(host_address);
-	struct in_addr addr;
+	char host_address[20] ;
+	const char *host_name = "www.age-soft.co.jp";
+	writeCharInput("1", "URL",host_name , directry, "url情報");
 	
-		/*printf("Function returned:\n");
-		
-		
-		printf("\tAddress type: ");
-		switch (remoteHost->h_addrtype) {
-		case AF_INET:
-			printf("AF_INET\n");
-			break;
-		case AF_INET6:
-			printf("AF_INET\n");
-			break;
-		case AF_NETBIOS:
-			printf("AF_NETBIOS\n");
-			break;
-		default:
-			printf(" %d\n", remoteHost->h_addrtype);
-			break;
-		}
-		printf("\tAddress length: %d\n", remoteHost->h_length);
-		 addr.s_addr = *(u_long *)remoteHost->h_addr_list[0];
-		printf("\tFirst IP Address: %s\n", inet_ntoa(addr));
-	*/
+	
 	if (argc != 2) {
 		printf("Usage : %s dest\n", argv[0]);
 		
@@ -64,16 +42,18 @@ int main(int argc, char *argv[]){
 
 	server.sin_family = AF_INET;//IPv4を使用
 	server.sin_port = htons(80); // HTTPのポートの80番
-
-	server.sin_addr.S_un.S_addr = inet_addr(host_address);
+	struct hostent *host;
+	struct sockaddr_in addr;
+	host = gethostbyname(host_name);
+	addr.sin_addr = *(struct in_addr *)(host->h_addr_list[0]);
+	server.sin_addr.S_un.S_addr = inet_addr(inet_ntoa(addr.sin_addr));
+	writeCharInput("1", "IPv4",inet_ntoa(addr.sin_addr), directry, "url情報");
 	if (server.sin_addr.S_un.S_addr == 0xffffffff) {
-		struct hostent *host;
-
-		host = gethostbyname(host_address);
+		
 		
 		if (host == NULL) {
 			if (WSAGetLastError() == WSAHOST_NOT_FOUND) {
-				printf("host not found : %s\n", host_address);
+				printf("host not found : %s\n", inet_ntoa(addr.sin_addr));
 			}
 			return 1;
 		}
