@@ -152,9 +152,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ConsoleApplication31.cpp" />
+    <ClCompile Include="HttpRequest.cpp" />
     <ClCompile Include="Setting.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HttpRequest.h" />
     <ClInclude Include="Setting.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
